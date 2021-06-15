@@ -1,0 +1,1622 @@
+{
+	"info": {
+		"_postman_id": "44979d70-1b15-478b-bde2-d3d503f9ace0",
+		"name": "Alteryx Server API",
+		"description": "Alteryx Server Gallery API\n\n# Overview\n\nThe Gallery API is made up of 4 APIs:\n\n- Subscription API: Endpoints for users to interact with subscriptions, workflows, and schedules (jobs).\n- User V2 API: Endpoints for users to interact with credentials, input files, and schedules (jobs).\n- Admin V1 API: Endpoints for admins to fetch resources from the Admin interface.\n- Admin V2 API: Version 2 of the endpoints for admins to fetch resources from the Admin interface.\n\n# Documentation\n\nThe complete reference documentation for all Gallery API endpoints is available in Swagger.\n\nThere are 2 places in Gallery where you can access the Gallery API Reference documentation.\n\n1. Select the question mark icon in the top toolbar and select API Documentation.\n2. Select your username and select **My Profile > Keys**. You can find links to the API documentation next to the API keys.\n\nYou can also access the API reference documentation for the Gallery API using this URL: **{yourhostname}/api-docs**. Yourhostname is the URL to your Gallery instance.\n\n# Authentication\n\nGallery API uses the OAuth 1.0a standard for authentication. The Gallery API only requires the signature generation, sometimes called a [1-legged flow](https://github.com/Kong/mashape-oauth/blob/master/FLOWS.md#oauth-10a-one-legged), rather than the full, 3-legged OAuth 1.0a flow. See the [Signing Process](https://oauth.net/core/1.0a/#signing_process) section of the OAuth 1.0a specification for information.\n\nUse a 3rd-party signature generation code that uses the OAuth 1.0a standard to generate these tokens that are required in every API call. Any additional parameters starting with oauth_ are ignored.\n\n- oauth_consumer_key=\"{consumer key}\"\n- oauth_signature_method=\"HMAC-SHA1\"\n- oauth_signature=\"{signature}\"\n- oauth_timestamp=\"{timestamp}\"\n- oauth_nonce=\"{nonce}\"\n- (optional) oauth_version=\"1.0\"\n\nFor enhanced security, we recommend that you send OAuth parameters as headers.\nHere is an example of a signed cURL request with all the generated tokens passed in an authorization header.\n\n```\ncurl --location --request POST 'http:{yourhostname}/api/user/v2/workflows' \\\n--header 'Authorization: OAuth oauth_consumer_key=\"{consumer key}\",\n                         oauth_signature_method=\"HMAC-SHA1\",\n                         oauth_signature=\"{signature}\",\n                         oauth_timestamp=\"{timestamp}\",\n                         oauth_nonce=\"{nonce}\"' \\\n```\n\n# Usage\n\nThis collection leverages environment and collections variables.\n\n## Environment variables\n\n| Name | Description |\n| --- | --- |\n| gallery-url | URL of the Alteryx Gallery |\n| user-key | User API key |\n| user-secret | User API secret |\n| studio-key | Private studio API key |\n| studio-secret | Private studio API secret |\n\n## Collection variables\n\n| Name | Description |\n| --- | --- |\n| appId | The unique identifier of the target application or workflow |\n| jobId | The unique identifier of the target job |\n| outputId | The unique identifier of the target output |\n\n# Resources\n\n- [Gallery API Overview](https://help.alteryx.com/current/developer-help/gallery-api-overview)\n- [Alteryx Public Gallery API interactive documentation](https://gallery.alteryx.com/api-docs/)\n- Fully-functional sample Gallery client in [C#](https://gallery.alteryx.com/api-docs/samples/Alteryx-CSharp-API-Sample.zip) or [JavaScript](https://gallery.alteryx.com/api-docs/samples/Alteryx-JavaScript-API-Sample.zip).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Admin V1",
+			"item": [
+				{
+					"name": "Package",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/admin/v1/:appId/package/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"v1",
+								":appId",
+								"package",
+								""
+							],
+							"variable": [
+								{
+									"key": "appId"
+								}
+							]
+						},
+						"description": "Returns the app that was requested.\n\n#### Implementation Notes\n\nReturns the app that was requested.\n\n#### Response Class\n\nstream"
+					},
+					"response": []
+				},
+				{
+					"name": "Audit Log",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/admin/v1/auditlog/?entity=User&page=1&pageSize=10",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"v1",
+								"auditlog",
+								""
+							],
+							"query": [
+								{
+									"key": "entity",
+									"value": "User",
+									"description": "The entity type."
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"description": "The page number."
+								},
+								{
+									"key": "pageSize",
+									"value": "10",
+									"description": "The page size."
+								}
+							]
+						},
+						"description": "Retrieve audit items for a given entity type.\n\n#### Implementation Notes\n\nOnly Gallery Curators(Admins) can use this API endpoint.\n\n#### Response Class\n\n##### Model\n\n```\nAlteryx.Server.Models.BaseModels.AuditEvent {\nid (string),\nentity (string),\nentityId (string),\nuserId (string),\ntimestamp (Date),\nevent (string),\noldValues (string),\nnewValues (string)\n}\n```\n\n##### Model Schema\n\n```\n[\n  {\n    \"id\": \"\",\n    \"entity\": \"\",\n    \"entityId\": \"\",\n    \"userId\": \"\",\n    \"timestamp\": \"Date\",\n    \"event\": \"\",\n    \"oldValues\": \"\",\n    \"newValues\": \"\"\n  }\n]\n```\n\n#### Response Messages\n\n| HTTP Status Code | Reason | Response Model |\n| --- | --- | --- |\n| 200 | Success | \n| 401 | The provided signature (oauth_signature) is invalid. | |"
+					},
+					"response": []
+				},
+				{
+					"name": "Collections",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/admin/v1/collections/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"v1",
+								"collections",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "The page number.",
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": "10",
+									"description": "Collections per page.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Finds collections in a Gallery.\n\n#### Implementation Notes\n\nOnly Gallery Curators(Admins) can use this API endpoint.\n\n#### Response Class\n\n##### Model\n\n```\nAlteryx.Server.Models.BaseModels.Collection {\nid (string),\ncollectionId (string),\nname (string),\nownerId (string),\ndateAdded (Date),\napps (array[Alteryx.Server.Models.BaseModels.ApplicationCollectionShare]),\nschedules (array[Alteryx.Server.Models.BaseModels.ScheduleCollectionShare]),\ninsights (array[Alteryx.Server.Models.BaseModels.InsightCollectionShare]),\nusers (array[Alteryx.Server.Models.BaseModels.UserCollectionShare]),\nsubscriptions (array[Alteryx.Server.Models.BaseModels.SubscriptionCollectionShare]),\nuserGroups (array[Alteryx.Server.Models.BaseModels.UserGroupCollectionShare])\n}\nAlteryx.Server.Models.BaseModels.ApplicationCollectionShare {\nappId (string),\ndateAdded (Date),\naddedById (string)\n}\nAlteryx.Server.Models.BaseModels.ScheduleCollectionShare {\nscheduleId (string),\ndateAdded (Date),\naddedById (string)\n}\nAlteryx.Server.Models.BaseModels.InsightCollectionShare {\ninsightId (string),\ndateAdded (Date),\naddedById (string)\n}\nAlteryx.Server.Models.BaseModels.UserCollectionShare {\nuserId (string),\ndateAdded (Date),\naddedById (string),\nactiveDirectoryObject (Alteryx.Server.Common.Utility.ActiveDirectoryObject),\nexpirationDate (Date, optional),\npermissions (Alteryx.Server.Models.BaseModels.CollectionPermissions)\n}\nAlteryx.Server.Common.Utility.ActiveDirectoryObject {\nsid (string),\ncategory (string) = ['Person' or 'Group'],\ndisplayName (string),\nname (string),\nsamAccountName (string)\n}\nAlteryx.Server.Models.BaseModels.CollectionPermissions {\ncollection (Alteryx.Server.Models.BaseModels.CollectionPermissions+LocalCollectionPermissions),\napplications (Alteryx.Server.Models.BaseModels.CollectionPermissions+UpdatePermissions),\nusers (Alteryx.Server.Models.BaseModels.CollectionPermissions+GenericPermissions)\n}\nAlteryx.Server.Models.BaseModels.CollectionPermissions+LocalCollectionPermissions {\nisAdmin (boolean)\n}\nAlteryx.Server.Models.BaseModels.CollectionPermissions+UpdatePermissions {\ncanAdd (boolean),\ncanRemove (boolean),\ncanUpdate (boolean)\n}\nAlteryx.Server.Models.BaseModels.CollectionPermissions+GenericPermissions {\ncanAdd (boolean),\ncanRemove (boolean)\n}\nAlteryx.Server.Models.BaseModels.SubscriptionCollectionShare {\nsubscriptionId (string),\ndateAdded (Date),\naddedById (string),\nexpirationDate (Date, optional),\noptOutUsers (array[string]),\npermissions (Alteryx.Server.Models.BaseModels.CollectionPermissions)\n}\nAlteryx.Server.Models.BaseModels.UserGroupCollectionShare {\nuserGroupId (string),\ndateAdded (Date),\naddedById (string),\nexpirationDate (Date, optional),\npermissions (Alteryx.Server.Models.BaseModels.CollectionPermissions)\n}\n```\n\n##### Model Schema\n\n```\n[\n  {\n    \"id\": \"\",\n    \"collectionId\": \"\",\n    \"name\": \"\",\n    \"ownerId\": \"\",\n    \"dateAdded\": \"Date\",\n    \"apps\": [\n      {\n        \"appId\": \"\",\n        \"dateAdded\": \"Date\",\n        \"addedById\": \"\"\n      }\n    ],\n    \"schedules\": [\n      {\n        \"scheduleId\": \"\",\n        \"dateAdded\": \"Date\",\n        \"addedById\": \"\"\n      }\n    ],\n    \"insights\": [\n      {\n        \"insightId\": \"\",\n        \"dateAdded\": \"Date\",\n        \"addedById\": \"\"\n      }\n    ],\n    \"users\": [\n      {\n        \"userId\": \"\",\n        \"dateAdded\": \"Date\",\n        \"addedById\": \"\",\n        \"activeDirectoryObject\": {\n          \"sid\": \"\",\n          \"category\": \"\",\n          \"displayName\": \"\",\n          \"name\": \"\",\n          \"samAccountName\": \"\"\n        },\n        \"expirationDate\": \"Date\",\n        \"permissions\": {\n          \"collection\": {\n            \"isAdmin\": false\n          },\n          \"applications\": {\n            \"canAdd\": false,\n            \"canRemove\": false,\n            \"canUpdate\": false\n          },\n          \"users\": {\n            \"canAdd\": false,\n            \"canRemove\": false\n          }\n        }\n      }\n    ],\n    \"subscriptions\": [\n      {\n        \"subscriptionId\": \"\",\n        \"dateAdded\": \"Date\",\n        \"addedById\": \"\",\n        \"expirationDate\": \"Date\",\n        \"optOutUsers\": [\n          \"\"\n        ],\n        \"permissions\": {\n          \"collection\": {\n            \"isAdmin\": false\n          },\n          \"applications\": {\n            \"canAdd\": false,\n            \"canRemove\": false,\n            \"canUpdate\": false\n          },\n          \"users\": {\n            \"canAdd\": false,\n            \"canRemove\": false\n          }\n        }\n      }\n    ],\n    \"userGroups\": [\n      {\n        \"userGroupId\": \"\",\n        \"dateAdded\": \"Date\",\n        \"addedById\": \"\",\n        \"expirationDate\": \"Date\",\n        \"permissions\": {\n          \"collection\": {\n            \"isAdmin\": false\n          },\n          \"applications\": {\n            \"canAdd\": false,\n            \"canRemove\": false,\n            \"canUpdate\": false\n          },\n          \"users\": {\n            \"canAdd\": false,\n            \"canRemove\": false\n          }\n        }\n      }\n    ]\n  }\n]\n```\n\n#### Response Messages\n\n| HTTP Status Code | Reason | Response Model |\n| --- | --- | --- |\n| 200 | Success | \n| 401 | The provided signature (oauth_signature) is invalid. | |"
+					},
+					"response": []
+				},
+				{
+					"name": "Insights",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/admin/v1/insights/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"v1",
+								"insights",
+								""
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "",
+									"description": "Only results containing the search text will be returned.",
+									"disabled": true
+								},
+								{
+									"key": "offset",
+									"value": "",
+									"description": "The index of the first record to return in the result set.",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "",
+									"description": "The number of records to return.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Finds insights in a Gallery.\n\n#### Implementation Notes\n\nOnly Gallery Curators(Admins) can use this API endpoint.\n\n#### Response Class\n\n##### Model\n\n```\nAlteryx.Server.Models.Api.Deprecated.DeprecatedInsightMetaInfo {\nid (string),\ninsightId (string),\nname (string),\nlastUpdated (Date),\nownerId (string),\niconId (string),\nowner (Alteryx.Server.Models.Api.Deprecated.DeprecatedUserBaseModel)\n}\nAlteryx.Server.Models.Api.Deprecated.DeprecatedUserBaseModel {\nid (string),\ncurator (boolean),\nanonymous (boolean),\nlicenseCurator (boolean),\nsponsor (string),\nemail (string),\nfirstName (string),\nlastName (string),\ndateAdded (Date, optional),\ndateUpdated (Date, optional),\ndateTermsAgreed (Date, optional),\nvalidated (boolean, optional),\npending (boolean, optional),\nactive (boolean, optional),\napiEnabled (boolean, optional),\napiKey (string),\napiSecret (string),\nsecurityInfo (Alteryx.Server.Models.BaseModels.SecurityInfo),\nnumFailedLogins (integer(32), optional),\naccountLocked (boolean, optional),\naccountLockedAt (Date, optional),\nuserProfile (Alteryx.Server.Models.BaseModels.UserProfile),\nsubscriptionId (string),\nleadSourceDetail (string),\nindustry (string),\noptions (array[System.Collections.Generic.KeyValuePair`2[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]]]),\nreferrer (string),\nexpirationDate (string),\nexpDate (Date, optional),\nupdateLastLoginDate (Date, optional),\nsId (string),\ndefaultCredential (Alteryx.Server.Models.ViewModels.DefaultUserCredential),\ncredentials (array[string]),\ndataConnections (array[string]),\ncanSchedule (boolean),\ncanSetPriority (boolean),\ncanSetWorkerAssignment (boolean),\nrecaptchaResponse (string),\ntimezone (string),\ncanCreateCollections (boolean)\n}\nAlteryx.Server.Models.BaseModels.SecurityInfo {\npassword (string),\nhmacKey (string),\nsalt (string)\n}\nAlteryx.Server.Models.BaseModels.UserProfile {\npicture (array[integer(8)]),\niconId (string)\n}\nSystem.Collections.Generic.KeyValuePair`2[[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089],[System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089]] {\n}\nAlteryx.Server.Models.ViewModels.DefaultUserCredential {\nusername (string),\npasswordId (string),\ncredentialId (string)\n}\n```\n\n##### Model Schema\n\n```\n[\n  {\n    \"id\": \"\",\n    \"insightId\": \"\",\n    \"name\": \"\",\n    \"lastUpdated\": \"Date\",\n    \"ownerId\": \"\",\n    \"iconId\": \"\",\n    \"owner\": {\n      \"id\": \"\",\n      \"curator\": false,\n      \"anonymous\": false,\n      \"licenseCurator\": false,\n      \"sponsor\": \"\",\n      \"email\": \"\",\n      \"firstName\": \"\",\n      \"lastName\": \"\",\n      \"dateAdded\": \"Date\",\n      \"dateUpdated\": \"Date\",\n      \"dateTermsAgreed\": \"Date\",\n      \"validated\": false,\n      \"pending\": false,\n      \"active\": false,\n      \"apiEnabled\": false,\n      \"apiKey\": \"\",\n      \"apiSecret\": \"\",\n      \"securityInfo\": {\n        \"password\": \"\",\n        \"hmacKey\": \"\",\n        \"salt\": \"\"\n      },\n      \"numFailedLogins\": \"integer(32)\",\n      \"accountLocked\": false,\n      \"accountLockedAt\": \"Date\",\n      \"userProfile\": {\n        \"picture\": [\n          \"integer(8)\"\n        ],\n        \"iconId\": \"\"\n      },\n      \"subscriptionId\": \"\",\n      \"leadSourceDetail\": \"\",\n      \"industry\": \"\",\n      \"options\": [\n        {}\n      ],\n      \"referrer\": \"\",\n      \"expirationDate\": \"\",\n      \"expDate\": \"Date\",\n      \"updateLastLoginDate\": \"Date\",\n      \"sId\": \"\",\n      \"defaultCredential\": {\n        \"username\": \"\",\n        \"passwordId\": \"\",\n        \"credentialId\": \"\"\n      },\n      \"credentials\": [\n        \"\"\n      ],\n      \"dataConnections\": [\n        \"\"\n      ],\n      \"canSchedule\": false,\n      \"canSetPriority\": false,\n      \"canSetWorkerAssignment\": false,\n      \"recaptchaResponse\": \"\",\n      \"timezone\": \"\",\n      \"canCreateCollections\": false\n    }\n  }\n]\n```\n\n#### Response Messages\n\n| HTTP Status Code | Reason | Response Model |\n| --- | --- | --- |\n| 200 | Success | \n| 401 | The provided API Key (oauth_consumer_key) is invalid. | |\n| 401 | The provided signature (oauth_signature) is invalid. | |"
+					},
+					"response": []
+				},
+				{
+					"name": "Schedules",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/admin/v1/schedules/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"v1",
+								"schedules",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "The page number.",
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": "10",
+									"description": "Schedules per page.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Finds schedules in a Gallery.\n\n#### Implementation Notes\n\nOnly Gallery Curators(Admins) can use this API endpoint.\n\n#### Response Class\n\n##### Model\n\n```\nAlteryx.Server.Models.ViewModels.ScheduleView {\nid (string),\napplication (application),\nowner (user),\nname (string),\ncomment (string),\nenabled (boolean),\npriority (string) = ['Low' or 'Medium' or 'High' or 'Critical' or 'Default'],\nworkerTag (string),\nstatus (string),\ncredential (Alteryx.Server.Models.ViewModels.SourcedCredentialView),\ncreationTime (string),\nlastRunTime (string),\nnextRunTime (string),\nstate (string),\nrunCount (integer(32)),\niteration (Alteryx.Server.Models.ViewModels.IterationBase),\nfrequency (string),\ntimezone (string),\nlastError (string),\ncpuName (string),\nlastModifiedId (string),\nlastModifiedDate (string),\ncanEdit (boolean)\n}\napplication {\nid (string),\nrevisionId (string),\nname (string),\niconId (string),\ncanExecute (boolean),\namp (boolean)\n}\nuser {\nid (string),\nrole (string),\nfirstName (string),\nlastName (string),\nemail (string),\nsortName (string),\nisActive (boolean),\ncredentialWorkFlowCount (integer(32))\n}\nAlteryx.Server.Models.ViewModels.SourcedCredentialView {\ncredentialId (string),\nusername (string),\nsource (string)\n}\nAlteryx.Server.Models.ViewModels.IterationBase {\nstartTime (string),\nendTime (string)\n}\n```\n\n##### Model Schema\n\n```\n[\n  {\n    \"id\": \"\",\n    \"application\": {\n      \"id\": \"\",\n      \"revisionId\": \"\",\n      \"name\": \"\",\n      \"iconId\": \"\",\n      \"canExecute\": false,\n      \"amp\": false\n    },\n    \"owner\": {\n      \"id\": \"\",\n      \"role\": \"\",\n      \"firstName\": \"\",\n      \"lastName\": \"\",\n      \"email\": \"\",\n      \"sortName\": \"\",\n      \"isActive\": false,\n      \"credentialWorkFlowCount\": \"integer(32)\"\n    },\n    \"name\": \"\",\n    \"comment\": \"\",\n    \"enabled\": false,\n    \"priority\": \"\",\n    \"workerTag\": \"\",\n    \"status\": \"\",\n    \"credential\": {\n      \"credentialId\": \"\",\n      \"username\": \"\",\n      \"source\": \"\"\n    },\n    \"creationTime\": \"\",\n    \"lastRunTime\": \"\",\n    \"nextRunTime\": \"\",\n    \"state\": \"\",\n    \"runCount\": \"integer(32)\",\n    \"iteration\": {\n      \"startTime\": \"\",\n      \"endTime\": \"\"\n    },\n    \"frequency\": \"\",\n    \"timezone\": \"\",\n    \"lastError\": \"\",\n    \"cpuName\": \"\",\n    \"lastModifiedId\": \"\",\n    \"lastModifiedDate\": \"\",\n    \"canEdit\": false\n  }\n]\n```\n\n#### Response Messages\n\n| HTTP Status Code | Reason | Response Model |\n| --- | --- | --- |\n| 200 | Success | \n| 401 | The provided signature (oauth_signature) is invalid. | |"
+					},
+					"response": []
+				},
+				{
+					"name": "Server Data Connection",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/admin/v1/serverdataconnections/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"v1",
+								"serverdataconnections",
+								""
+							],
+							"query": [
+								{
+									"key": "offset",
+									"value": "",
+									"description": "The index of the first record to return in the result set.",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "",
+									"description": "The number of records to return.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Returns data connections created in a private Gallery.\n\n#### Implementation Notes\n\nOnly Gallery Curators(Admins) can use this API endpoint.\n\n#### Response Class\n\n##### Model\n\n```\nAlteryx.Server.Models.ViewModels.DataConnectionSearchView {\nconnectionId (string),\nconnectionString (string),\nconnectionName (string),\nconnectionType (string),\nsubscriptionCount (integer(32)),\nuserCount (integer(32)),\nuserGroupCount (integer(32))\n}\n```\n\n##### Model Schema\n\n```\n[\n  {\n    \"connectionId\": \"\",\n    \"connectionString\": \"\",\n    \"connectionName\": \"\",\n    \"connectionType\": \"\",\n    \"subscriptionCount\": \"integer(32)\",\n    \"userCount\": \"integer(32)\",\n    \"userGroupCount\": \"integer(32)\"\n  }\n]\n```\n\n#### Response Messages\n\n| HTTP Status Code | Reason | Response Model |\n| --- | --- | --- |\n| 200 | Success | \n| 401 | The provided API Key (oauth_consumer_key) is invalid. | |\n| 401 | The provided signature (oauth_signature) is invalid. | |"
+					},
+					"response": []
+				},
+				{
+					"name": "Subscriptions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/admin/v1/subscriptions/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"v1",
+								"subscriptions",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "The page number.",
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": "10",
+									"description": "Subscriptions per page.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Finds subscriptions in a Gallery.\n\n#### Implementation Notes\n\nOnly Gallery Curators(Admins) can use this API endpoint.\n\n#### Response Class\n\n##### Model\n\n```\nAlteryx.Server.Models.Api.Deprecated.DeprecatedAdminApiSubscriptionView {\nid (string),\nactive (boolean),\ndefaultWorkerTag (string),\nexpirationDate (string),\nmemberPassesPurchased (integer(32)),\nmemberPassesUsed (integer(32)),\nname (string),\nprimaryContactInfo (Alteryx.Server.Models.Api.Deprecated.ContactInfo)\n}\nAlteryx.Server.Models.Api.Deprecated.ContactInfo {\nname (string),\nemail (string),\ncompany (string),\naddress (Alteryx.Server.Models.Api.Deprecated.MailingAddress)\n}\nAlteryx.Server.Models.Api.Deprecated.MailingAddress {\ncountry (string),\naddressLine1 (string),\naddressLine2 (string),\ncity (string),\nstate (string),\npostalCode (string)\n}\n```\n\n##### Model Schema\n\n```\n[\n  {\n    \"id\": \"\",\n    \"active\": false,\n    \"defaultWorkerTag\": \"\",\n    \"expirationDate\": \"\",\n    \"memberPassesPurchased\": \"integer(32)\",\n    \"memberPassesUsed\": \"integer(32)\",\n    \"name\": \"\",\n    \"primaryContactInfo\": {\n      \"name\": \"\",\n      \"email\": \"\",\n      \"company\": \"\",\n      \"address\": {\n        \"country\": \"\",\n        \"addressLine1\": \"\",\n        \"addressLine2\": \"\",\n        \"city\": \"\",\n        \"state\": \"\",\n        \"postalCode\": \"\"\n      }\n    }\n  }\n]\n```\n\n#### Response Messages\n\n| HTTP Status Code | Reason | Response Model |\n| --- | --- | --- |\n| 200 | Success | \n| 401 | The provided signature (oauth_signature) is invalid. | |"
+					},
+					"response": []
+				},
+				{
+					"name": "System Data Connections",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/admin/v1/systemdataconnections/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"v1",
+								"systemdataconnections",
+								""
+							],
+							"query": [
+								{
+									"key": "offset",
+									"value": "",
+									"description": "The index of the first record to return in the result set.",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "",
+									"description": "The number of records to return.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Returns system data connections created on the server where Alteryx Server is installed.\n\n#### Implementation Notes\n\nOnly Gallery Curators(Admins) can use this API endpoint.\n\n#### Response Class\n\n##### Model\n\n```\nAlteryx.Server.Models.ViewModels.DataConnectionSearchView {\nconnectionId (string),\nconnectionString (string),\nconnectionName (string),\nconnectionType (string),\nsubscriptionCount (integer(32)),\nuserCount (integer(32)),\nuserGroupCount (integer(32))\n}\n```\n\n##### Model Schema\n\n```\n[\n  {\n    \"connectionId\": \"\",\n    \"connectionString\": \"\",\n    \"connectionName\": \"\",\n    \"connectionType\": \"\",\n    \"subscriptionCount\": \"integer(32)\",\n    \"userCount\": \"integer(32)\",\n    \"userGroupCount\": \"integer(32)\"\n  }\n]\n```\n\n#### Response Messages\n\n| HTTP Status Code | Reason | Response Model |\n| --- | --- | --- |\n| 200 | Success | \n| 401 | The provided API Key (oauth_consumer_key) is invalid. | |\n| 401 | The provided signature (oauth_signature) is invalid. | |"
+					},
+					"response": []
+				},
+				{
+					"name": "Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/admin/v1/users/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"v1",
+								"users",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "The page number.",
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": "10",
+									"description": "Users per page.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Finds users in a Gallery.\n\n#### Implementation Notes\n\nOnly Gallery Curators(Admins) can use this API endpoint.\n\n#### Response Class\n\n##### Model\n\n```\nAlteryx.Server.Models.Api.Deprecated.DeprecatedAdminApiUserView {\nid (string),\naccountLocked (boolean),\naccountLockedAt (string),\nactive (boolean),\nanonymous (boolean),\ncanSchedule (boolean),\ncanSetPriority (boolean),\ncanSetWorkerAssignment (boolean),\ncurator (boolean),\ndateAdded (string),\ndateUpdated (string),\nemail (string),\nexpirationDate (string),\nfirstName (string),\nlastName (string),\nnumFailedLogins (integer(32)),\npending (boolean),\nsubscriptionId (string),\nupdateLastLoginDate (string),\nuserProfile (Alteryx.Server.Models.BaseModels.UserProfile),\nvalidated (boolean),\ntimezone (string)\n}\nAlteryx.Server.Models.BaseModels.UserProfile {\npicture (array[integer(8)]),\niconId (string)\n}\n```\n\n##### Model Schema\n\n```\n[\n  {\n    \"id\": \"\",\n    \"accountLocked\": false,\n    \"accountLockedAt\": \"\",\n    \"active\": false,\n    \"anonymous\": false,\n    \"canSchedule\": false,\n    \"canSetPriority\": false,\n    \"canSetWorkerAssignment\": false,\n    \"curator\": false,\n    \"dateAdded\": \"\",\n    \"dateUpdated\": \"\",\n    \"email\": \"\",\n    \"expirationDate\": \"\",\n    \"firstName\": \"\",\n    \"lastName\": \"\",\n    \"numFailedLogins\": \"integer(32)\",\n    \"pending\": false,\n    \"subscriptionId\": \"\",\n    \"updateLastLoginDate\": \"\",\n    \"userProfile\": {\n      \"picture\": [\n        \"integer(8)\"\n      ],\n      \"iconId\": \"\"\n    },\n    \"validated\": false,\n    \"timezone\": \"\"\n  }\n]\n```\n\n#### Response Messages\n\n| HTTP Status Code | Reason | Response Model |\n| --- | --- | --- |\n| 200 | Success | \n| 401 | The provided signature (oauth_signature) is invalid. | |"
+					},
+					"response": []
+				},
+				{
+					"name": "Publish Workflow",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"description": "The filename of the workflow.",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "name",
+									"value": "Postman",
+									"description": "The new workflow name.",
+									"type": "text"
+								},
+								{
+									"key": "owner",
+									"value": "{{email-address}}",
+									"description": "The owner of the migrated workflow. The email address must exist in the target environment.",
+									"type": "text"
+								},
+								{
+									"key": "validate",
+									"value": "true",
+									"description": "Flag to validate the workflow upon migrating to the target environment.",
+									"type": "text"
+								},
+								{
+									"key": "isPublic",
+									"value": "false",
+									"description": "Flag to set the workflow to public to show in “My Company’s Gallery” in the target environment.",
+									"type": "text"
+								},
+								{
+									"key": "sourceId",
+									"value": "",
+									"description": "This is the Source environment appId of the to-be-migrated workflow. If a workflow with the same sourceId exists, this replaces that workflow in the target environment. Otherwise, a new workflow will be generated. (Send an empty string if you do not wish to specify an appID.)",
+									"type": "text"
+								},
+								{
+									"key": "workerTag",
+									"value": "",
+									"description": "Add a worker tag to the workflow to have a specific worker to run the workflow. (Send an empty string if you do not wish to specify worker.)",
+									"type": "text"
+								},
+								{
+									"key": "canDownload",
+									"value": "true",
+									"description": "Flag to set the workflow as available for download by other users in the target environment.",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{gallery-url}}/api/admin/v1/workflows/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"v1",
+								"workflows",
+								""
+							]
+						},
+						"description": "Publishes a YXZP to the system.\n\n#### Implementation Notes\n\nOnly Gallery Curators(Admins) can use this API endpoint.\nUses a MultiPart/Form-Data request to publish a workflow package to Server. \n\nForm-data parameters are:\n\n| Parameter | Description | Type | Required |\n| --- | --- | --- | --- |\n| file | The filename of the workflow. | String| True |\n| name | The new workflow name. | String| True |\n| owner | The owner of the migrated workflow. The email address must exist in the target environment. | String| True |\n| validate | Flag to validate the workflow upon migrating to the target environment. | Boolean| True |\n| isPublic | Flag to set the workflow to public to show in “My Company’s Gallery” in the target environment. | Boolean| True |\n| sourceId | This is the Source environment appId of the to-be-migrated workflow. If a workflow with the same sourceId exists, this replaces that workflow in the target environment. Otherwise, a new workflow will be generated. (Send an empty string if you do not wish to specify an appID.) | String| True |\n| workerTag | Add a worker tag to the workflow to have a specific worker to run the workflow. (Send an empty string if you do not wish to specify worker.) | String| True |\n| canDownload | Flag to set the workflow as available for download by other users in the target environment. | Boolean| True |\n| comments | Field to add in workflow details comments. | String| False |\n\n\nExample:\n\n```\n--FORM-BOUNDARY\nContent-Disposition: form-data; name=\"file\"; filename=\"{fileName}\"Content-Type: {contentType}\n{fileContents}\n--FORM-BOUNDARY\nContent-Disposition: form-data; name=\"name\"\n{appDisplayName}\n--FORM-BOUNDARY\nContent-Disposition: form-data; name=\"owner\"\n{appOwnerEmailAddress}\n--FORM-BOUNDARY\nContent-Disposition: form-data; name=\"validate\"\n{true|false}\n--FORM-BOUNDARY\nContent-Disposition: form-data; name=\"isPublic\"\n{true|false}\n--FORM-BOUNDARY\nContent-Disposition: form-data; name=\"sourceId\"\n{appIdFromSourceServer}\n--FORM-BOUNDARY\nContent-Disposition: form-data; name=\"workerTag\"\n{tagValue}\n--FORM-BOUNDARY\nContent-Disposition: form-data; name=\"canDownload\"\n{true|false}\n--FORM-BOUNDARY\nContent-Disposition: form-data; name=\"comments\"\n{detailsComment}\n--FORM-BOUNDARY\n```\n\n#### Response Class\n\nstring\n\n#### Response Messages\n\n| HTTP Status Code | Reason | Response Model |\n| --- | --- | --- |\n| 200 | Success | \n| 401 | The provided signature (oauth_signature) is invalid. | |"
+					},
+					"response": []
+				},
+				{
+					"name": "Workflows",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/admin/v1/workflows/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"v1",
+								"workflows",
+								""
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "",
+									"description": "Only results containing the search text will be returned.",
+									"disabled": true
+								},
+								{
+									"key": "sortField",
+									"value": "uploaddate",
+									"description": "The field on which in the results should be sorted.",
+									"disabled": true
+								},
+								{
+									"key": "direction",
+									"value": "asc",
+									"description": "The direction of the sort used with search results.",
+									"disabled": true
+								},
+								{
+									"key": "offset",
+									"value": "",
+									"description": "The index of the first record to return in the result set.",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "",
+									"description": "The number of records to return.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Finds workflows in a Gallery.\n\n#### Implementation Notes\n\nOnly Gallery Curators(Admins) can use this API endpoint.\n\n#### Response Class\n\n##### Model\n\n```\nWorkflow {\nid (string),\nsubscriptionId (string),\npublic (boolean),\nrunDisabled (boolean),\npackageType (string, optional) = ['App' or 'Module' or 'Macro'],\nuploadDate (Date),\nfileName (string),\nmetaInfo (WorkflowMetaInfo),\nisChained (boolean),\nversion (integer(32), optional),\nrunCount (integer(32)),\nworkerTag (string),\nisE2 (boolean)\n}\nWorkflowMetaInfo {\nname (string),\ndescription (string),\nauthor (string),\ncopyright (string),\nurl (string),\nurlText (string),\noutputMessage (string),\nnoOutputFilesMessage (string)\n}\n```\n\n##### Model Schema\n\n```\n[\n  {\n    \"id\": \"\",\n    \"subscriptionId\": \"\",\n    \"public\": false,\n    \"runDisabled\": false,\n    \"packageType\": \"\",\n    \"uploadDate\": \"Date\",\n    \"fileName\": \"\",\n    \"metaInfo\": {\n      \"name\": \"\",\n      \"description\": \"\",\n      \"author\": \"\",\n      \"copyright\": \"\",\n      \"url\": \"\",\n      \"urlText\": \"\",\n      \"outputMessage\": \"\",\n      \"noOutputFilesMessage\": \"\"\n    },\n    \"isChained\": false,\n    \"version\": \"integer(32)\",\n    \"runCount\": \"integer(32)\",\n    \"workerTag\": \"\",\n    \"isE2\": false\n  }\n]\n```\n\n#### Response Messages\n\n| HTTP Status Code | Reason | Response Model |\n| --- | --- | --- |\n| 200 | Success |\n| 401 | The provided API Key (oauth_consumer_key) is invalid. | |\n| 401 | The provided signature (oauth_signature) is invalid. | |"
+					},
+					"response": []
+				},
+				{
+					"name": "Workflows (all)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/admin/v1/workflows/all/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"v1",
+								"workflows",
+								"all",
+								""
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "",
+									"description": "The starting date to filter on, inclusive.",
+									"disabled": true
+								},
+								{
+									"key": "endDate",
+									"value": "",
+									"description": "The ending date to filter on, inclusive.",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "",
+									"description": "The page number to start. (Zero based)",
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": "",
+									"description": "Workflows per page. (Zero means return all)",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Return all workflows, optionally filtered by date.\n\n#### Implementation Notes\n\nOnly Gallery Curators(Admins) can use this API endpoint.\n\n#### Response Class\n\n##### Model\n\n```\nAlteryx.Server.Models.Api.WorkflowAllAdminApiView {\nid (string),\nrevisions (array[Alteryx.Server.Models.Api.WfaAdminApiRevisionView]),\ncreator (Alteryx.Server.Models.Api.WfaAdminApiUserView),\nsubscription (Alteryx.Server.Models.Api.WfaAdminApiSubView),\nevents (array[Alteryx.Server.Models.Api.WfaAdminApiEventView]),\nrunDisabled (boolean),\nisPublic (boolean),\ndateMadePublic (string),\nisDeleted (boolean),\nrunCount (integer(32)),\niconId (string),\nworkerTag (string),\nisReadyForMigration (boolean)\n}\nAlteryx.Server.Models.Api.WfaAdminApiRevisionView {\nid (string),\nversion (integer(32)),\nauthor (Alteryx.Server.Models.Api.WfaAdminApiUserView),\ndateCreated (string),\nexecutionMode (string),\nisChunkedPackage (boolean),\nrunCount (integer(32)),\ndownloadCount (integer(32)),\npackageType (string),\nhasPrivateDataExemption (boolean),\nuploadDate (string),\ncredentialType (string),\nisE2 (boolean),\ncanDownload (boolean),\nallowVersionHistory (boolean),\nshowVersionHistory (boolean),\napplications (array[Alteryx.Server.Models.Api.WfaAdminApiAppView]),\ncomments (string)\n}\nAlteryx.Server.Models.Api.WfaAdminApiUserView {\nid (string),\nfirstName (string),\nlastName (string),\nemail (string),\nsubscription (Alteryx.Server.Models.Api.WfaAdminApiSubView)\n}\nAlteryx.Server.Models.Api.WfaAdminApiSubView {\nid (string),\nname (string)\n}\nAlteryx.Server.Models.Api.WfaAdminApiAppView {\nname (string),\nfilename (string),\nnextApp (string)\n}\nAlteryx.Server.Models.Api.WfaAdminApiEventView {\nuser (Alteryx.Server.Models.Api.WfaAdminApiUserView),\ntimestamp (string),\nevent (string),\noldValues (string),\nnewValues (string)\n}\n```\n\n##### Model Schema\n\n```\n[\n  {\n    \"id\": \"\",\n    \"revisions\": [\n      {\n        \"id\": \"\",\n        \"version\": \"integer(32)\",\n        \"author\": {\n          \"id\": \"\",\n          \"firstName\": \"\",\n          \"lastName\": \"\",\n          \"email\": \"\",\n          \"subscription\": {\n            \"id\": \"\",\n            \"name\": \"\"\n          }\n        },\n        \"dateCreated\": \"\",\n        \"executionMode\": \"\",\n        \"isChunkedPackage\": false,\n        \"runCount\": \"integer(32)\",\n        \"downloadCount\": \"integer(32)\",\n        \"packageType\": \"\",\n        \"hasPrivateDataExemption\": false,\n        \"uploadDate\": \"\",\n        \"credentialType\": \"\",\n        \"isE2\": false,\n        \"canDownload\": false,\n        \"allowVersionHistory\": false,\n        \"showVersionHistory\": false,\n        \"applications\": [\n          {\n            \"name\": \"\",\n            \"filename\": \"\",\n            \"nextApp\": \"\"\n          }\n        ],\n        \"comments\": \"\"\n      }\n    ],\n    \"creator\": {\n      \"id\": \"\",\n      \"firstName\": \"\",\n      \"lastName\": \"\",\n      \"email\": \"\",\n      \"subscription\": {\n        \"id\": \"\",\n        \"name\": \"\"\n      }\n    },\n    \"subscription\": {\n      \"id\": \"\",\n      \"name\": \"\"\n    },\n    \"events\": [\n      {\n        \"user\": {\n          \"id\": \"\",\n          \"firstName\": \"\",\n          \"lastName\": \"\",\n          \"email\": \"\",\n          \"subscription\": {\n            \"id\": \"\",\n            \"name\": \"\"\n          }\n        },\n        \"timestamp\": \"\",\n        \"event\": \"\",\n        \"oldValues\": \"\",\n        \"newValues\": \"\"\n      }\n    ],\n    \"runDisabled\": false,\n    \"isPublic\": false,\n    \"dateMadePublic\": \"\",\n    \"isDeleted\": false,\n    \"runCount\": \"integer(32)\",\n    \"iconId\": \"\",\n    \"workerTag\": \"\",\n    \"isReadyForMigration\": false\n  }\n]\n```\n\n#### Response Messages\n\n| HTTP Status Code | Reason | Response Model |\n| --- | --- | --- |\n| 200 | Success |\n| 401 | The provided signature (oauth_signature) is invalid. | |"
+					},
+					"response": []
+				},
+				{
+					"name": "Jobs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/admin/v1/workflows/jobs/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"v1",
+								"workflows",
+								"jobs",
+								""
+							],
+							"query": [
+								{
+									"key": "appIds",
+									"value": "{{appId}}",
+									"description": "The ID of the apps for which you want to retrieve metadata in a comma seperated list. Returns all if not specified",
+									"disabled": true
+								},
+								{
+									"key": "includeMessage",
+									"value": "False",
+									"description": "Whether or not to return messages. True by default",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Returns the last run job and its current state for workflows.\n\n#### Implementation Notes\n\nOnly Gallery Curators(Admins) can use this API endpoint.\n\n#### Response Class\n\n##### Model\n\n```\nJob {\nid (string),\nappId (string),\ncreateDate (Date),\nstatus (string),\ndisposition (string),\noutputs (System.Collections.Generic.IEnumerable`1[[Alteryx.Server.Models.Api.OutputDataApiView, Alteryx.Server.Models, Version=2021.2.1.35394, Culture=neutral, PublicKeyToken=null]]),\nmessages (System.Collections.Generic.IEnumerable`1[[Alteryx.Server.Models.Api.EngineMessageApiView, Alteryx.Server.Models, Version=2021.2.1.35394, Culture=neutral, PublicKeyToken=null]]),\npriority (string) = ['Low' or 'Medium' or 'High' or 'Critical' or 'Default'],\nworkerTag (string),\nrunWithE2 (boolean)\n}\nSystem.Collections.Generic.IEnumerable`1[[Alteryx.Server.Models.Api.OutputDataApiView, Alteryx.Server.Models, Version=2021.2.1.35394, Culture=neutral, PublicKeyToken=null]] {\n}\nSystem.Collections.Generic.IEnumerable`1[[Alteryx.Server.Models.Api.EngineMessageApiView, Alteryx.Server.Models, Version=2021.2.1.35394, Culture=neutral, PublicKeyToken=null]] {\n}\n```\n\n##### Model Schema\n\n```\n[\n  {\n    \"id\": \"\",\n    \"appId\": \"\",\n    \"createDate\": \"Date\",\n    \"status\": \"\",\n    \"disposition\": \"\",\n    \"outputs\": {},\n    \"messages\": {},\n    \"priority\": \"\",\n    \"workerTag\": \"\",\n    \"runWithE2\": false\n  }\n]\n```\n\n#### Response Messages\n\n| HTTP Status Code | Reason | Response Model |\n| --- | --- | --- |\n| 200 | Success |\n| 401 | The provided API Key (oauth_consumer_key) is invalid. | |\n| 401 | The provided signature (oauth_signature) is invalid. | |"
+					},
+					"response": []
+				},
+				{
+					"name": "Ready to Migrate",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/admin/v1/workflows/migratable/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"v1",
+								"workflows",
+								"migratable",
+								""
+							],
+							"query": [
+								{
+									"key": "subscriptionIds",
+									"value": "",
+									"description": "Comma seperated list of subscriptions to filter by",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Finds workflows in a Gallery that have been marked ready for migration.\n\n#### Implementation Notes\n\nOnly Gallery Curators(Admins) can use this API endpoint.\n\nClick [here](https://community.alteryx.com/t5/Alteryx-Server-Knowledge-Base/Migrating-Workflows/ta-p/335774) for additional documentation.\n\n#### Response Class\n\narray[array]\n\n#### Response Messages\n\n| HTTP Status Code | Reason | Response Model |\n| --- | --- | --- |\n| 200 | Success |\n| 401 | The provided signature (oauth_signature) is invalid. | |"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Migration Flag",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "false",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gallery-url}}/api/admin/v1/workflows/migratable/:appId/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"v1",
+								"workflows",
+								"migratable",
+								":appId",
+								""
+							],
+							"variable": [
+								{
+									"key": "appId",
+									"value": "{{appId}}",
+									"description": "The ID of the app to update."
+								}
+							]
+						},
+						"description": "Updates an App's ready for migration flag.\n\n#### Implementation Notes\n\nOnly Gallery Curators(Admins) can use this API endpoint.\n\nClick [here](https://community.alteryx.com/t5/Alteryx-Server-Knowledge-Base/Migrating-Workflows/ta-p/335774) for additional documentation.\n\n#### Response Class\n\nboolean\n\n#### Response Messages\n\n| HTTP Status Code | Reason | Response Model |\n| --- | --- | --- |\n| 200 | Success |\n| 401 | The provided signature (oauth_signature) is invalid. | |"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints for admins to fetch resources from the Admin interface.",
+			"auth": {
+				"type": "oauth1",
+				"oauth1": [
+					{
+						"key": "consumerSecret",
+						"value": "{{user-secret}}",
+						"type": "string"
+					},
+					{
+						"key": "consumerKey",
+						"value": "{{user-key}}",
+						"type": "string"
+					},
+					{
+						"key": "addParamsToHeader",
+						"value": true,
+						"type": "boolean"
+					},
+					{
+						"key": "addEmptyParamsToSign",
+						"value": false,
+						"type": "boolean"
+					},
+					{
+						"key": "signatureMethod",
+						"value": "HMAC-SHA1",
+						"type": "string"
+					},
+					{
+						"key": "version",
+						"value": "1.0",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Admin V2",
+			"item": [
+				{
+					"name": "Insights",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/admin/v2/insights/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"v2",
+								"insights",
+								""
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "",
+									"description": "Only results containing the search text will be returned.",
+									"disabled": true
+								},
+								{
+									"key": "offset",
+									"value": "",
+									"description": "The index of the first record to return in the result set.",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "",
+									"description": "The number of records to return.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Finds insights in a Gallery.\n\n\n#### Implementation Notes\n\nOnly Gallery Curators(Admins) can use this API endpoint.\n\n#### Response Class\n\n##### Model\n\n```\nAlteryx.Server.Models.BaseModels.InsightMetaInfo {\nid (string),\ninsightId (string),\nname (string),\nlastUpdated (Date),\nownerId (string),\niconId (string),\nowner (Alteryx.Server.Models.BaseModels.User)\n}\nAlteryx.Server.Models.BaseModels.User {\nid (string),\nrole (string),\nanonymous (boolean),\nemail (string),\nfirstName (string),\nlastName (string),\ndateAdded (Date, optional),\ndateUpdated (Date, optional),\nvalidated (boolean, optional),\npending (boolean, optional),\nactive (boolean, optional),\napiEnabled (boolean, optional),\napiKey (string),\napiSecret (string),\nsecurityInfo (Alteryx.Server.Models.BaseModels.SecurityInfo),\nnumFailedLogins (integer(32), optional),\naccountLocked (boolean, optional),\naccountLockedAt (Date, optional),\nuserProfile (Alteryx.Server.Models.BaseModels.UserProfile),\nsubscriptionId (string),\nexpirationDate (string),\nexpDate (Date, optional),\nupdateLastLoginDate (Date, optional),\nwindowsIdentity (Alteryx.Server.Models.ActiveDirectory.WindowsIdentity),\ndefaultCredential (Alteryx.Server.Models.ViewModels.DefaultUserCredential),\ncredentials (array[string]),\ndataConnections (array[string]),\ncanSchedule (boolean),\ncanSetPriority (boolean),\ncanSetWorkerAssignment (boolean),\ntimezone (string),\ncanCreateCollections (boolean)\n}\nAlteryx.Server.Models.BaseModels.SecurityInfo {\npassword (string),\nhmacKey (string),\nsalt (string)\n}\nAlteryx.Server.Models.BaseModels.UserProfile {\npicture (array[integer(8)]),\niconId (string)\n}\nAlteryx.Server.Models.ActiveDirectory.WindowsIdentity {\nsId (string),\ndisplayName (string),\nname (string),\nsamAccountName (string)\n}\nAlteryx.Server.Models.ViewModels.DefaultUserCredential {\nusername (string),\npasswordId (string),\ncredentialId (string)\n}\n```\n\n##### Model Schema\n\n```\n[\n  {\n    \"id\": \"\",\n    \"insightId\": \"\",\n    \"name\": \"\",\n    \"lastUpdated\": \"Date\",\n    \"ownerId\": \"\",\n    \"iconId\": \"\",\n    \"owner\": {\n      \"id\": \"\",\n      \"role\": \"\",\n      \"anonymous\": false,\n      \"email\": \"\",\n      \"firstName\": \"\",\n      \"lastName\": \"\",\n      \"dateAdded\": \"Date\",\n      \"dateUpdated\": \"Date\",\n      \"validated\": false,\n      \"pending\": false,\n      \"active\": false,\n      \"apiEnabled\": false,\n      \"apiKey\": \"\",\n      \"apiSecret\": \"\",\n      \"securityInfo\": {\n        \"password\": \"\",\n        \"hmacKey\": \"\",\n        \"salt\": \"\"\n      },\n      \"numFailedLogins\": \"integer(32)\",\n      \"accountLocked\": false,\n      \"accountLockedAt\": \"Date\",\n      \"userProfile\": {\n        \"picture\": [\n          \"integer(8)\"\n        ],\n        \"iconId\": \"\"\n      },\n      \"subscriptionId\": \"\",\n      \"expirationDate\": \"\",\n      \"expDate\": \"Date\",\n      \"updateLastLoginDate\": \"Date\",\n      \"windowsIdentity\": {\n        \"sId\": \"\",\n        \"displayName\": \"\",\n        \"name\": \"\",\n        \"samAccountName\": \"\"\n      },\n      \"defaultCredential\": {\n        \"username\": \"\",\n        \"passwordId\": \"\",\n        \"credentialId\": \"\"\n      },\n      \"credentials\": [\n        \"\"\n      ],\n      \"dataConnections\": [\n        \"\"\n      ],\n      \"canSchedule\": false,\n      \"canSetPriority\": false,\n      \"canSetWorkerAssignment\": false,\n      \"timezone\": \"\",\n      \"canCreateCollections\": false\n    }\n  }\n]\n```\n\n#### Response Messages\n\n| HTTP Status Code | Reason | Response Model |\n| --- | --- | --- |\n| 200 | Success | |\n| 401 | The provided API Key (oauth_consumer_key) is invalid. | |\n| 401 | The provided signature (oauth_signature) is invalid. | |"
+					},
+					"response": []
+				},
+				{
+					"name": "Schedule Forecast",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "before",
+								"value": "",
+								"description": "Date - Returns jobs that will run before this date",
+								"type": "text"
+							},
+							{
+								"key": "after",
+								"value": "",
+								"description": "Date - Returns jobs that will run after this date",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{gallery-url}}/api/admin/v2/schedule/forecast/?before=&after=",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"v2",
+								"schedule",
+								"forecast",
+								""
+							],
+							"query": [
+								{
+									"key": "before",
+									"value": "",
+									"description": "Will only return jobs that will run before this date"
+								},
+								{
+									"key": "after",
+									"value": "",
+									"description": "Will only return jobs that will run after this date"
+								}
+							]
+						},
+						"description": "Forecasts all future run jobs for the given time period. Must be less than a 45 day window.\n\n#### Implementation Notes\n\nOnly Gallery Curators(Admins) can use this API endpoint.\n\n#### Response Class\n\n##### Model\n\n```\nAlteryx.Server.Models.ViewModels.ScheduleForecastView {\nid (string),\nappEstimatedCompletionTime (integer(32)),\nscheduleName (string),\nstartTime (Date),\nfrequency (string),\nworkflowName (string),\nowner (Alteryx.Server.Models.ViewModels.OwnerView),\npriority (integer(32))\n}\nAlteryx.Server.Models.ViewModels.OwnerView {\nid (string),\nfirstName (string),\nlastName (string),\nemail (string),\nsubscriptionId (string)\n}\n```\n\n##### Model Schema\n\n```\n[\n  {\n    \"id\": \"\",\n    \"appEstimatedCompletionTime\": \"integer(32)\",\n    \"scheduleName\": \"\",\n    \"startTime\": \"Date\",\n    \"frequency\": \"\",\n    \"workflowName\": \"\",\n    \"owner\": {\n      \"id\": \"\",\n      \"firstName\": \"\",\n      \"lastName\": \"\",\n      \"email\": \"\",\n      \"subscriptionId\": \"\"\n    },\n    \"priority\": \"integer(32)\"\n  }\n]\n```\n\n#### Response Messages\n\n| HTTP Status Code | Reason | Response Model |\n| --- | --- | --- |\n| 200 | Success | \n| 401 | The provided API Key (oauth_consumer_key) is invalid. | |\n| 401 | The provided signature (oauth_signature) is invalid. | |"
+					},
+					"response": []
+				},
+				{
+					"name": "Subscriptions",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/admin/v2/subscriptions/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"v2",
+								"subscriptions",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "The page number.",
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": "10",
+									"description": "Subscriptions per page.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "#### Implementation Notes\n\nOnly Gallery Curators(Admins) can use this API endpoint.\n\n#### Response Class\n\n##### Model\n\n```\nAlteryx.Server.Models.Api.AdminApiSubscriptionView {\nid (string),\nactive (boolean),\ndefaultWorkerTag (string),\nexpirationDate (string),\nname (string)\n}\n```\n\n##### Model Schema\n\n```\n[\n  {\n    \"id\": \"\",\n    \"active\": false,\n    \"defaultWorkerTag\": \"\",\n    \"expirationDate\": \"\",\n    \"name\": \"\"\n  }\n]\n```\n\n#### Response Messages\n\n| HTTP Status Code | Reason | Response Model |\n| --- | --- | --- |\n| 200 | Success | \n| 401 | The provided signature (oauth_signature) is invalid. | |"
+					},
+					"response": []
+				},
+				{
+					"name": "Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/admin/v2/users/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"v2",
+								"users",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "The page number.",
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": "10",
+									"description": "Users per page.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Finds users in a Gallery.\n\n#### Implementation Notes\n\nOnly Gallery Curators(Admins) can use this API endpoint.\n\n#### Response Class\n\n##### Model\n\n```\nAlteryx.Server.Models.Api.AdminApiUserView {\nid (string),\naccountLocked (boolean),\naccountLockedAt (string),\nactive (boolean),\nanonymous (boolean),\ncanSchedule (boolean),\ncanSetPriority (boolean),\ncanSetWorkerAssignment (boolean),\ndateAdded (string),\ndateUpdated (string),\nemail (string),\nexpirationDate (string),\nfirstName (string),\nlastName (string),\nnumFailedLogins (integer(32)),\npending (boolean),\nsubscriptionId (string),\nupdateLastLoginDate (string),\nuserProfile (Alteryx.Server.Models.BaseModels.UserProfile),\nvalidated (boolean),\ntimezone (string),\nrole (string)\n}\nAlteryx.Server.Models.BaseModels.UserProfile {\npicture (array[integer(8)]),\niconId (string)\n}\n```\n\n##### Model Schema\n\n```\n[\n  {\n    \"id\": \"\",\n    \"accountLocked\": false,\n    \"accountLockedAt\": \"\",\n    \"active\": false,\n    \"anonymous\": false,\n    \"canSchedule\": false,\n    \"canSetPriority\": false,\n    \"canSetWorkerAssignment\": false,\n    \"dateAdded\": \"\",\n    \"dateUpdated\": \"\",\n    \"email\": \"\",\n    \"expirationDate\": \"\",\n    \"firstName\": \"\",\n    \"lastName\": \"\",\n    \"numFailedLogins\": \"integer(32)\",\n    \"pending\": false,\n    \"subscriptionId\": \"\",\n    \"updateLastLoginDate\": \"\",\n    \"userProfile\": {\n      \"picture\": [\n        \"integer(8)\"\n      ],\n      \"iconId\": \"\"\n    },\n    \"validated\": false,\n    \"timezone\": \"\",\n    \"role\": \"\"\n  }\n]\n```\n\n#### Response Messages\n\n| HTTP Status Code | Reason | Response Model |\n| --- | --- | --- |\n| 200 | Success | \n| 401 | The provided signature (oauth_signature) is invalid. | |"
+					},
+					"response": []
+				},
+				{
+					"name": "Workflows (all)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/admin/v2/workflows/all/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"admin",
+								"v2",
+								"workflows",
+								"all",
+								""
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": null,
+									"description": "The name of the workflow to filter on.",
+									"disabled": true
+								},
+								{
+									"key": "startDate",
+									"value": null,
+									"description": "The starting date to filter on, inclusive.",
+									"disabled": true
+								},
+								{
+									"key": "endDate",
+									"value": null,
+									"description": "The ending date to filter on, inclusive.",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": null,
+									"description": "The page number to start. (Zero based)",
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": null,
+									"description": "Workflows per page. (Zero means return all)",
+									"disabled": true
+								},
+								{
+									"key": "useEvents",
+									"value": null,
+									"description": "Whether to use audit event dates to filter.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Return all workflows, optionally filtered by date.\n\n#### Implementation Notes\n\nOnly Gallery Curators(Admins) can use this API endpoint.\n\n#### Response Class\n\n##### Model\n\n```\nAlteryx.Server.Models.BaseModels.InsightMetaInfo {\nid (string),\ninsightId (string),\nname (string),\nlastUpdated (Date),\nownerId (string),\niconId (string),\nowner (Alteryx.Server.Models.BaseModels.User)\n}\nAlteryx.Server.Models.BaseModels.User {\nid (string),\nrole (string),\nanonymous (boolean),\nemail (string),\nfirstName (string),\nlastName (string),\ndateAdded (Date, optional),\ndateUpdated (Date, optional),\nvalidated (boolean, optional),\npending (boolean, optional),\nactive (boolean, optional),\napiEnabled (boolean, optional),\napiKey (string),\napiSecret (string),\nsecurityInfo (Alteryx.Server.Models.BaseModels.SecurityInfo),\nnumFailedLogins (integer(32), optional),\naccountLocked (boolean, optional),\naccountLockedAt (Date, optional),\nuserProfile (Alteryx.Server.Models.BaseModels.UserProfile),\nsubscriptionId (string),\nexpirationDate (string),\nexpDate (Date, optional),\nupdateLastLoginDate (Date, optional),\nwindowsIdentity (Alteryx.Server.Models.ActiveDirectory.WindowsIdentity),\ndefaultCredential (Alteryx.Server.Models.ViewModels.DefaultUserCredential),\ncredentials (array[string]),\ndataConnections (array[string]),\ncanSchedule (boolean),\ncanSetPriority (boolean),\ncanSetWorkerAssignment (boolean),\ntimezone (string),\ncanCreateCollections (boolean)\n}\nAlteryx.Server.Models.BaseModels.SecurityInfo {\npassword (string),\nhmacKey (string),\nsalt (string)\n}\nAlteryx.Server.Models.BaseModels.UserProfile {\npicture (array[integer(8)]),\niconId (string)\n}\nAlteryx.Server.Models.ActiveDirectory.WindowsIdentity {\nsId (string),\ndisplayName (string),\nname (string),\nsamAccountName (string)\n}\nAlteryx.Server.Models.ViewModels.DefaultUserCredential {\nusername (string),\npasswordId (string),\ncredentialId (string)\n}\n```\n\n##### Model Schema\n\n```\n[\n  {\n    \"id\": \"\",\n    \"insightId\": \"\",\n    \"name\": \"\",\n    \"lastUpdated\": \"Date\",\n    \"ownerId\": \"\",\n    \"iconId\": \"\",\n    \"owner\": {\n      \"id\": \"\",\n      \"role\": \"\",\n      \"anonymous\": false,\n      \"email\": \"\",\n      \"firstName\": \"\",\n      \"lastName\": \"\",\n      \"dateAdded\": \"Date\",\n      \"dateUpdated\": \"Date\",\n      \"validated\": false,\n      \"pending\": false,\n      \"active\": false,\n      \"apiEnabled\": false,\n      \"apiKey\": \"\",\n      \"apiSecret\": \"\",\n      \"securityInfo\": {\n        \"password\": \"\",\n        \"hmacKey\": \"\",\n        \"salt\": \"\"\n      },\n      \"numFailedLogins\": \"integer(32)\",\n      \"accountLocked\": false,\n      \"accountLockedAt\": \"Date\",\n      \"userProfile\": {\n        \"picture\": [\n          \"integer(8)\"\n        ],\n        \"iconId\": \"\"\n      },\n      \"subscriptionId\": \"\",\n      \"expirationDate\": \"\",\n      \"expDate\": \"Date\",\n      \"updateLastLoginDate\": \"Date\",\n      \"windowsIdentity\": {\n        \"sId\": \"\",\n        \"displayName\": \"\",\n        \"name\": \"\",\n        \"samAccountName\": \"\"\n      },\n      \"defaultCredential\": {\n        \"username\": \"\",\n        \"passwordId\": \"\",\n        \"credentialId\": \"\"\n      },\n      \"credentials\": [\n        \"\"\n      ],\n      \"dataConnections\": [\n        \"\"\n      ],\n      \"canSchedule\": false,\n      \"canSetPriority\": false,\n      \"canSetWorkerAssignment\": false,\n      \"timezone\": \"\",\n      \"canCreateCollections\": false\n    }\n  }\n]\n```\n\n#### Response Messages\n\n| HTTP Status Code | Reason | Response Model |\n| --- | --- | --- |\n| 200 | Success | |\n| 401 | The provided API Key (oauth_consumer_key) is invalid. | |\n| 401 | The provided signature (oauth_signature) is invalid. | |"
+					},
+					"response": []
+				}
+			],
+			"description": "Version 2 of the endpoints for admins to fetch resources from the Admin interface.",
+			"auth": {
+				"type": "oauth1",
+				"oauth1": [
+					{
+						"key": "consumerSecret",
+						"value": "{{user-secret}}",
+						"type": "string"
+					},
+					{
+						"key": "consumerKey",
+						"value": "{{user-key}}",
+						"type": "string"
+					},
+					{
+						"key": "addParamsToHeader",
+						"value": true,
+						"type": "boolean"
+					},
+					{
+						"key": "addEmptyParamsToSign",
+						"value": false,
+						"type": "boolean"
+					},
+					{
+						"key": "signatureMethod",
+						"value": "HMAC-SHA1",
+						"type": "string"
+					},
+					{
+						"key": "version",
+						"value": "1.0",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Subscription",
+			"item": [
+				{
+					"name": "Subscription",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/v1/workflows/subscription/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"workflows",
+								"subscription",
+								""
+							],
+							"query": [
+								{
+									"key": "sortField",
+									"value": "uploaddate",
+									"description": "The field on which in the results should be sorted.",
+									"disabled": true
+								},
+								{
+									"key": "direction",
+									"value": "asc",
+									"description": "The direction of the sort used with search results.",
+									"disabled": true
+								},
+								{
+									"key": "offset",
+									"value": "",
+									"description": "The index of the first record to return in the result set.",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "",
+									"description": "The number of records to return.",
+									"disabled": true
+								},
+								{
+									"key": "search",
+									"value": "",
+									"description": "Only results containing the search text will be returned.",
+									"disabled": true
+								},
+								{
+									"key": "packageType",
+									"value": "0",
+									"description": "The type of workflow to be returned, any of 1 (apps), 1(workflow), 2(macros).",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Finds workflows in a subscription.\n\n#### Implementation Notes\n\nSubscription is tied to API key. You cannot request workflows for any other subscription without that subscription's key.\n\n#### Response Class\n\n##### Model\n\n```\nWorkflow {\nid (string),\nsubscriptionId (string),\npublic (boolean),\nrunDisabled (boolean),\npackageType (string, optional) = ['App' or 'Module' or 'Macro'],\nuploadDate (Date),\nfileName (string),\nmetaInfo (WorkflowMetaInfo),\nisChained (boolean),\nversion (integer(32), optional),\nrunCount (integer(32)),\nworkerTag (string),\nisE2 (boolean)\n}\nWorkflowMetaInfo {\nname (string),\ndescription (string),\nauthor (string),\ncopyright (string),\nurl (string),\nurlText (string),\noutputMessage (string),\nnoOutputFilesMessage (string)\n}\n```\n\n##### Model Schema\n\n```\n[\n  {\n    \"id\": \"\",\n    \"subscriptionId\": \"\",\n    \"public\": false,\n    \"runDisabled\": false,\n    \"packageType\": \"\",\n    \"uploadDate\": \"Date\",\n    \"fileName\": \"\",\n    \"metaInfo\": {\n      \"name\": \"\",\n      \"description\": \"\",\n      \"author\": \"\",\n      \"copyright\": \"\",\n      \"url\": \"\",\n      \"urlText\": \"\",\n      \"outputMessage\": \"\",\n      \"noOutputFilesMessage\": \"\"\n    },\n    \"isChained\": false,\n    \"version\": \"integer(32)\",\n    \"runCount\": \"integer(32)\",\n    \"workerTag\": \"\",\n    \"isE2\": false\n  }\n]\n```\n\n#### Response Messages\n\n| HTTP Status Code | Reason | Response Model |\n| --- | --- | --- |\n| 200 | Success\t| |\n| 401 | The provided API Key (oauth_consumer_key) is invalid. | |\n| 401 | The provided signature (oauth_signature) is invalid. | |"
+					},
+					"response": []
+				},
+				{
+					"name": "Questions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/v1/workflows/:appId/questions/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"workflows",
+								":appId",
+								"questions",
+								""
+							],
+							"variable": [
+								{
+									"key": "appId",
+									"value": "{{appId}}",
+									"description": "The ID of the app for which you want to retrieve the questions."
+								}
+							]
+						},
+						"description": "Returns the questions for the given Alteryx Analtytics App.\n\n#### Implementation Notes\n\nOnly app workflows can be used.\n\n#### Response Class\n##### Model\n\n```\nQuestion {\nname (string),\ntype (string),\ndescription (string),\nvalue (string),\nitems (array[QuestionItem]),\nmultiple (string)\n}\nQuestionItem {\nkey (string),\nvalue (string)\n}\n```\n\n##### Model Schema\n\n```\n[\n  {\n    \"name\": \"\",\n    \"type\": \"\",\n    \"description\": \"\",\n    \"value\": \"\",\n    \"items\": [\n      {\n        \"key\": \"\",\n        \"value\": \"\"\n      }\n    ],\n    \"multiple\": \"\"\n  }\n]\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Queue Job",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"questions\": [\r\n    {\r\n      \"name\": \"\",\r\n      \"value\": \"\"\r\n    }\r\n  ],\r\n  \"priority\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gallery-url}}/api/v1/workflows/:appId/jobs/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"workflows",
+								":appId",
+								"jobs",
+								""
+							],
+							"variable": [
+								{
+									"key": "appId",
+									"value": "{{appId}}",
+									"description": "The ID of the app to execute."
+								}
+							]
+						},
+						"description": "Queue an app execution job. Returns the ID of the job.\n\n#### Implementation Notes\n\nUse the status request to get the results of the job.\n\n#### Response Class\n\n##### Model\n\n```\nJob {\nid (string),\nappId (string),\ncreateDate (Date),\nstatus (string),\ndisposition (string),\noutputs (System.Collections.Generic.IEnumerable`1[[Alteryx.Server.Models.Api.OutputDataApiView, Alteryx.Server.Models, Version=2021.2.1.35394, Culture=neutral, PublicKeyToken=null]]),\nmessages (System.Collections.Generic.IEnumerable`1[[Alteryx.Server.Models.Api.EngineMessageApiView, Alteryx.Server.Models, Version=2021.2.1.35394, Culture=neutral, PublicKeyToken=null]]),\npriority (string) = ['Low' or 'Medium' or 'High' or 'Critical' or 'Default'],\nworkerTag (string),\nrunWithE2 (boolean)\n}\nSystem.Collections.Generic.IEnumerable`1[[Alteryx.Server.Models.Api.OutputDataApiView, Alteryx.Server.Models, Version=2021.2.1.35394, Culture=neutral, PublicKeyToken=null]] {\n}\nSystem.Collections.Generic.IEnumerable`1[[Alteryx.Server.Models.Api.EngineMessageApiView, Alteryx.Server.Models, Version=2021.2.1.35394, Culture=neutral, PublicKeyToken=null]] {\n}\n```\n\n##### Model Schema\n\n```\n{\n  \"id\": \"\",\n  \"appId\": \"\",\n  \"createDate\": \"Date\",\n  \"status\": \"\",\n  \"disposition\": \"\",\n  \"outputs\": {},\n  \"messages\": {},\n  \"priority\": \"\",\n  \"workerTag\": \"\",\n  \"runWithE2\": false\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "App Jobs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/v1/workflows/:appId/jobs/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"workflows",
+								":appId",
+								"jobs",
+								""
+							],
+							"query": [
+								{
+									"key": "sortField",
+									"value": "createdate",
+									"description": "The field on which the results should be sorted.",
+									"disabled": true
+								},
+								{
+									"key": "direction",
+									"value": "asc",
+									"description": "The direction of the sort used with search results.",
+									"disabled": true
+								},
+								{
+									"key": "offset",
+									"value": "",
+									"description": "The index of the first record to return in the result set.",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "",
+									"description": "The number of records to return.",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "appId",
+									"value": "{{appId}}",
+									"description": "The ID of the app for which you want to retrieve the jobs."
+								}
+							]
+						},
+						"description": "Returns the jobs for the given Alteryx Analtytics App.\n\n#### Implementation Notes\nOnly app workflows can be used.\n\n#### Response Class\n\n##### Model\n\n```\nJobList {\nid (string),\ncreateDate (Date),\nstatus (string),\ndisposition (string),\npriority (string) = ['Low' or 'Medium' or 'High' or 'Critical' or 'Default'],\nworkerTag (string),\nrunWithE2 (string)\n}\n```\n\n##### Model schema\n\n```\n[\n  {\n    \"id\": \"\",\n    \"createDate\": \"Date\",\n    \"status\": \"\",\n    \"disposition\": \"\",\n    \"priority\": \"\",\n    \"workerTag\": \"\",\n    \"runWithE2\": \"\"\n  }\n]\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Jobs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/v1/jobs/:jobId/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"jobs",
+								":jobId",
+								""
+							],
+							"query": [
+								{
+									"key": "includeMessages",
+									"value": "True",
+									"description": "Whether or not to return messages. True by default.",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "jobId",
+									"value": "{{jobId}}",
+									"description": "The ID of the job to retrieve."
+								}
+							]
+						},
+						"description": "Retrieves the job and its current state.\n\n#### Implementation Notes\n\nOnly app workflows can be used.\n\n#### Response Class\n\n##### Model\n\n```\nJob {\nid (string),\nappId (string),\ncreateDate (Date),\nstatus (string),\ndisposition (string),\noutputs (System.Collections.Generic.IEnumerable`1[[Alteryx.Server.Models.Api.OutputDataApiView, Alteryx.Server.Models, Version=2021.2.1.35394, Culture=neutral, PublicKeyToken=null]]),\nmessages (System.Collections.Generic.IEnumerable`1[[Alteryx.Server.Models.Api.EngineMessageApiView, Alteryx.Server.Models, Version=2021.2.1.35394, Culture=neutral, PublicKeyToken=null]]),\npriority (string) = ['Low' or 'Medium' or 'High' or 'Critical' or 'Default'],\nworkerTag (string),\nrunWithE2 (boolean)\n}\nSystem.Collections.Generic.IEnumerable`1[[Alteryx.Server.Models.Api.OutputDataApiView, Alteryx.Server.Models, Version=2021.2.1.35394, Culture=neutral, PublicKeyToken=null]] {\n}\nSystem.Collections.Generic.IEnumerable`1[[Alteryx.Server.Models.Api.EngineMessageApiView, Alteryx.Server.Models, Version=2021.2.1.35394, Culture=neutral, PublicKeyToken=null]] {\n}\n```\n\n##### Model Schema\n\n```\n{\n  \"id\": \"\",\n  \"appId\": \"\",\n  \"createDate\": \"Date\",\n  \"status\": \"\",\n  \"disposition\": \"\",\n  \"outputs\": {},\n  \"messages\": {},\n  \"priority\": \"\",\n  \"workerTag\": \"\",\n  \"runWithE2\": false\n}\n```"
+					},
+					"response": []
+				},
+				{
+					"name": "Output",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/v1/jobs/:jobId/output/:outputId/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"jobs",
+								":jobId",
+								"output",
+								":outputId",
+								""
+							],
+							"query": [
+								{
+									"key": "format",
+									"value": "Raw",
+									"description": "The format you want the output in.",
+									"disabled": true
+								},
+								{
+									"key": "attachment",
+									"value": "",
+									"description": "Specify whether or not you want to receive a file.",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "jobId",
+									"value": "{{jobId}}",
+									"description": "The job Id of the app for which you want to retrieve the output."
+								},
+								{
+									"key": "outputId",
+									"value": "{{outputId}}",
+									"description": "The ID for the output you want to retrieve."
+								}
+							]
+						},
+						"description": "Returns output for a given job.\n\n#### Implementation Notes\n\nOnly app workflows can be used.\n\n#### Response Class\n\nstream"
+					},
+					"response": []
+				},
+				{
+					"name": "Package",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/v1/:appId/package/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								":appId",
+								"package",
+								""
+							],
+							"query": [
+								{
+									"key": "version",
+									"value": "",
+									"description": "The ID of the version for which you want to retrieve.",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "appId",
+									"value": "{{appId}}",
+									"description": "The ID of the app for which you want to retrieve."
+								}
+							]
+						},
+						"description": "Returns the app that was requested.\n\n#### Implementation Notes\n\nReturns the app that was requested.\n\n#### Response Class\n\nstream"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints for users to interact with subscriptions, workflows, and schedules (jobs).",
+			"auth": {
+				"type": "oauth1",
+				"oauth1": [
+					{
+						"key": "consumerSecret",
+						"value": "{{studio-secret}}",
+						"type": "string"
+					},
+					{
+						"key": "consumerKey",
+						"value": "{{studio-key}}",
+						"type": "string"
+					},
+					{
+						"key": "addParamsToHeader",
+						"value": true,
+						"type": "boolean"
+					},
+					{
+						"key": "addEmptyParamsToSign",
+						"value": false,
+						"type": "boolean"
+					},
+					{
+						"key": "signatureMethod",
+						"value": "HMAC-SHA1",
+						"type": "string"
+					},
+					{
+						"key": "version",
+						"value": "1.0",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "User V2",
+			"item": [
+				{
+					"name": "Credentials",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{gallery-url}}/api/user/v2/credentials/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"v2",
+								"credentials",
+								""
+							]
+						},
+						"description": "Finds credentials shared directly with users or via a sub\n\n#### Implementation Notes\n\nFinds credentials shared directly with users or via a sub.\n\n#### Response Class\n\n##### Model\n\n```\nCredential {\nid (string),\nuserName (string)\n}\n```\n\n##### Model Schema\n\n```\n[\n  {\n    \"id\": \"\",\n    \"userName\": \"\"\n  }\n]\n```\n\n#### Response Messages\n\n| HTTP Status Code | Reason | Response Model |\n| --- | --- | --- |\n| 200\t| Success\t| |\n| 401\t| The provided signature (oauth_signature) is invalid. | |"
+					},
+					"response": []
+				},
+				{
+					"name": "Input files",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "inputFile",
+									"description": "The multipart form data request for the file.",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{gallery-url}}/api/user/v2/inputfiles/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"v2",
+								"inputfiles",
+								""
+							]
+						},
+						"description": "Publishes a file to be used in a workflow.\n\n#### Implementation Notes\n\nUse a MultiPart/Form-Data request to publish a temporary file to be used as an input to an Analytic App. The name of the required form-data section is inputFile.\n\n```\n--FORM-BOUNDARY\nContent-Disposition: form-data; name=\"inputFile\"; filename={fileName}\nContent-Type: {contentType}\n{fileContents}\n--FORM-BOUNDARY\n```\n\nUse the `fileId` returned as an input parameter in an Analytic App.\n\n#### Response Class\n\nstring"
+					},
+					"response": []
+				},
+				{
+					"name": "Queue Job",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"questions\": [\r\n    {\r\n      \"name\": \"\",\r\n      \"value\": \"\"\r\n    }\r\n  ],\r\n  \"priority\": \"Low\",\r\n  \"credentialId\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{gallery-url}}/api/user/v2/workflows/:appId/jobs/",
+							"host": [
+								"{{gallery-url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"v2",
+								"workflows",
+								":appId",
+								"jobs",
+								""
+							],
+							"variable": [
+								{
+									"key": "appId",
+									"value": "{{appId}}",
+									"description": "The ID of the app to execute."
+								}
+							]
+						},
+						"description": "Queue an app execution job. Returns the ID of the job.\n\n#### Implementation Notes\n\nUse the status request to get the results of the job.\n\n#### Response Class\n\n##### Model\n\n```\nJob {\nid (string),\nappId (string),\ncreateDate (Date),\nstatus (string),\ndisposition (string),\noutputs (System.Collections.Generic.IEnumerable`1[[Alteryx.Server.Models.Api.OutputDataApiView, Alteryx.Server.Models, Version=2021.2.1.35394, Culture=neutral, PublicKeyToken=null]]),\nmessages (System.Collections.Generic.IEnumerable`1[[Alteryx.Server.Models.Api.EngineMessageApiView, Alteryx.Server.Models, Version=2021.2.1.35394, Culture=neutral, PublicKeyToken=null]]),\npriority (string) = ['Low' or 'Medium' or 'High' or 'Critical' or 'Default'],\nworkerTag (string),\nrunWithE2 (boolean)\n}\nSystem.Collections.Generic.IEnumerable`1[[Alteryx.Server.Models.Api.OutputDataApiView, Alteryx.Server.Models, Version=2021.2.1.35394, Culture=neutral, PublicKeyToken=null]] {\n}\nSystem.Collections.Generic.IEnumerable`1[[Alteryx.Server.Models.Api.EngineMessageApiView, Alteryx.Server.Models, Version=2021.2.1.35394, Culture=neutral, PublicKeyToken=null]] {\n}\n```\n\n##### Model Schema\n\n```\n{\n  \"id\": \"\",\n  \"appId\": \"\",\n  \"createDate\": \"Date\",\n  \"status\": \"\",\n  \"disposition\": \"\",\n  \"outputs\": {},\n  \"messages\": {},\n  \"priority\": \"\",\n  \"workerTag\": \"\",\n  \"runWithE2\": false\n}\n```"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints for users to interact with credentials, input files, and schedules (jobs).",
+			"auth": {
+				"type": "oauth1",
+				"oauth1": [
+					{
+						"key": "consumerSecret",
+						"value": "{{user-secret}}",
+						"type": "string"
+					},
+					{
+						"key": "consumerKey",
+						"value": "{{user-key}}",
+						"type": "string"
+					},
+					{
+						"key": "addParamsToHeader",
+						"value": true,
+						"type": "boolean"
+					},
+					{
+						"key": "addEmptyParamsToSign",
+						"value": false,
+						"type": "boolean"
+					},
+					{
+						"key": "signatureMethod",
+						"value": "HMAC-SHA1",
+						"type": "string"
+					},
+					{
+						"key": "version",
+						"value": "1.0",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "appId",
+			"value": ""
+		},
+		{
+			"key": "jobId",
+			"value": ""
+		},
+		{
+			"key": "outputId",
+			"value": ""
+		}
+	]
+}
